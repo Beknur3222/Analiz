@@ -83,6 +83,24 @@ df.head(5)
 #Бос жолдардың суммасы
 print(df.isnull().sum())
 
+# %%
+df = df.drop(['model'], axis=1)
+Q1 = df.quantile(0.25)
+Q3 = df.quantile(0.75)
+IQR = Q3 - Q1
+print("Межквартильные диапазоны:\n", IQR)
+
+# %%
+filtered_df = df[~((df < (Q1 - 1.5 * IQR))) | (df > (Q3 + 1.5 * IQR)).any(axis=1)]
+filtered_df_shape = filtered_df.shape
+print("Размерность данных после фильтрации:", filtered_df_shape)
+
+# %%
+plt.figure(figsize=(10,5))
+correlation_matrix = df.corr()
+sns.heatmap(correlation_matrix, cmap="BrBG", annot=True)
+plt.show()
+
 #%%
 #Қорап түріндегі граффик
 sns.boxplot(x=df['mpg'])
